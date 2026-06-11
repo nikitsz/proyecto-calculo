@@ -69,8 +69,37 @@ class App(ctk.CTk):
         #=====================
         # Limites algebraicos
         #=====================
-    def L_algebraicos(x, c):
-        x, c = symbols('x c')
+
+    def L_algebraicos(self):
+        contenedor = ctk.CTkFrame(self.L_algebraicos) 
+        contenedor.pack(fill="both", expand=True, padx=10, pady=10)
+
+        panel = ctk.CTkFrame(contenedor, width=340)
+        panel.pack(side="left", fill="y", padx=10, pady=10)
+
+        grafico = ctk.CTkFrame(contenedor)
+        grafico.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
+        ctk.CTkLabel(panel, text="Límite algebraico", font=("Arial", 24, "bold")).pack(pady=15)
+
+        ctk.CTkLabel(panel, text="Función: ").pack()
+        entry_funcion = ctk.CTkEntry(app, placeholder_text="Ingrese f(x) ej: (x**2 - 1)/(x - 1)")
+        entry_funcion.pack(pady=10)
+
+        ctk.CTkLabel(panel, text="Valor al que tiende x: ").pack()
+        entry_h = ctk.CTkEntry(app, placeholder_text="Valor de c (ej: 1 o oo)")
+        entry_h.pack(pady=10)
+
+        """#ctk.CTkButton(
+            panel, 
+            text="Calcular y graficar"
+            command=self.graicar_limite
+        ).pack(pady=20)"""
+        
+        self.resulttado_limite = ctk.CTkTextbox(panel, width=310, height=350)
+        self.resultado_limite.pack(pady=10)
+
+    #def graficar_limite(self):
 
 
 
