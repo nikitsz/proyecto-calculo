@@ -6,6 +6,34 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import math
 
+def calcular_limite_numerico(funcion_str, c_str):
+    #Interpretar el valor de 'c' (por si el usuario escribe "pi" o "pi/2")
+    try:
+        # Usamos sympify para que entienda "pi" y evalf para volverlo decimal
+        c_val = float(sp.sympify(c_str).evalf())
+    except Exception:
+        return "Error: Verifica el valor de x."
+
+    # 2. Definir una distancia 'h' muy pequeña para acercarnos
+    h = 0.00001 
+    
+    #Evaluar por la izquierda (c - h) y por la derecha (c + h)
+    lim_izq = evaluar_funcion(funcion_str, c_val - h)
+    lim_der = evaluar_funcion(funcion_str, c_val + h)
+    
+    # 4. Comprobar si hubo errores matemáticos (ej. asíntotas verticales)
+    if lim_izq is None or lim_der is None:
+        return "El límite diverge o es indefinido"
+        
+    #Comparar ambos lados. Si la diferencia es muy chiquita, convergen al mismo punto.
+    if abs(lim_izq - lim_der) < 0.01:
+        # Promediamos ambos lados para mayor precisión y redondeamos a 4 decimales
+        limite_final = (lim_izq + lim_der) / 2
+        return round(limite_final, 4)
+    else:
+        # Si por la izquierda da un número y por la derecha otro muy distinto
+        return "No existe (límites laterales distintos)"
+
 #Configuración de la ventana
 class App(ctk.CTk):
     def __init__(self):
