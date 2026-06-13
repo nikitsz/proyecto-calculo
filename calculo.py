@@ -121,3 +121,94 @@ def calcular_limite():
         resultado_txt.delete("1.0", "end")
         resultado_txt.insert("1.0", f"Error en la expresión matemática:\n{e}\n\nRecuerda usar * para multiplicar y ** para potencias.")
         resultado_txt.configure(state="disabled")
+# ==========================================
+# 2. CONFIGURACIÓN DE LA INTERFAZ GRÁFICA
+# ==========================================
+
+# Configuración principal de la ventana
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+
+app = ctk.CTk() # Instancia directa (Sin clases)
+app.geometry("900x600")
+app.title("Analizador de Límites")
+
+# Adaptación de redimensionamiento
+app.grid_columnconfigure(0, weight=1)
+app.grid_rowconfigure(0, weight=1)
+
+# Creación de pestañas
+tabs = ctk.CTkTabview(app)
+tabs.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+tab_inicio = tabs.add("Inicio")
+tab_calculadora = tabs.add("Calculadora de Límites")
+
+
+# CONTENIDO: Pestaña de Inicio
+
+titulo = ctk.CTkLabel(tab_inicio, text="Bienvenido al Analizador", font=("Arial", 30, "bold"))
+titulo.pack(pady=25)
+
+texto_intro = """Programa para calcular y representar límites matemáticos.
+
+Características de este software:
+- Interfaz gráfica con CustomTkinter usando pestañas.
+- Gráficos integrados con Matplotlib.
+- Cálculo de límites analítico por sustitución y factorización (sin sp.limit).
+- Evaluación lateral numérica.
+- Generación de coordenadas con Python puro (sin numpy)."""
+
+caja = ctk.CTkTextbox(tab_inicio, width=600, height=200, font=("Arial", 14))
+caja.pack(pady=20)
+caja.insert("1.0", texto_intro)
+caja.configure(state="disabled")
+
+
+# CONTENIDO: Pestaña Calculadora
+
+contenedor = ctk.CTkFrame(tab_calculadora) 
+contenedor.pack(fill="both", expand=True, padx=10, pady=10)
+
+# Panel izquierdo para los controles
+panel = ctk.CTkFrame(contenedor, width=320)
+panel.pack(side="left", fill="y", padx=10, pady=10)
+
+# Panel derecho para el gráfico
+grafico_frame = ctk.CTkFrame(contenedor)
+grafico_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
+ctk.CTkLabel(panel, text="Cálculo de Límite", font=("Arial", 20, "bold")).pack(pady=15)
+
+ctk.CTkLabel(panel, text="Función f(x):").pack()
+entry_funcion = ctk.CTkEntry(panel, placeholder_text="Ej: (x**2-1)/(x-1)", width=250)
+entry_funcion.pack(pady=5)
+
+ctk.CTkLabel(panel, text="Valor al que tiende x (c):").pack()
+entry_c = ctk.CTkEntry(panel, placeholder_text="Ej: 0, pi, oo", width=250)
+entry_c.pack(pady=5)
+
+# Botón que llama a la función principal que creamos arriba
+ctk.CTkButton(panel, text="Calcular y Graficar", command=calcular_limite).pack(pady=20)
+
+resultado_txt = ctk.CTkTextbox(panel, width=280, height=200)
+resultado_txt.pack(pady=10)
+resultado_txt.insert("1.0", "Ingresa los datos y presiona calcular.")
+resultado_txt.configure(state="disabled")
+
+# Preparar el lienzo de Matplotlib vacío al iniciar
+figura = Figure(figsize=(5, 4), dpi=100)
+# Poner fondo oscuro a la gráfica para que combine con CustomTkinter
+figura.patch.set_facecolor('#2b2b2b')
+ax = figura.add_subplot(111)
+ax.set_facecolor('#2b2b2b')
+ax.tick_params(colors='white')
+
+canvas = FigureCanvasTkAgg(figura, master=grafico_frame)
+canvas.get_tk_widget().pack(fill="both", expand=True)
+
+
+# 3. PUNTO DE ARRANQUE DEL PROGRAMA
+
+if __name__ == "__main__":
+    app.mainloop()
